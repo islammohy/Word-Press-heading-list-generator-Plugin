@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Heading List</title>
+</head>
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            const headingList = document.createElement('ul');
+            const stack = [{ level: 0, parent: headingList }];
+
+            headings.forEach((heading, index) => {
+                const listItem = document.createElement('li');
+                const link = document.createElement('a');
+                link.textContent = heading.textContent;
+                link.href = `#heading${index + 1}`;
+                listItem.appendChild(link);
+
+                const currentLevel = parseInt(heading.tagName.charAt(1));
+
+                while (currentLevel <= stack[stack.length - 1].level) {
+                    stack.pop();
+                }
+
+                if (currentLevel > stack[stack.length - 1].level) {
+                    const subList = document.createElement('ul');
+                    stack[stack.length - 1].parent.appendChild(subList);
+                    stack.push({ level: currentLevel, parent: subList });
+                }
+
+                stack[stack.length - 1].parent.appendChild(listItem);
+
+                heading.id = `heading${index + 1}`;
+            });
+
+            document.body.insertBefore(headingList, document.body.firstChild);
+        });
+    </script>
+
+    <h1>This is Heading 1</h1>
+    <p>Content for Heading 1...</p>
+
+    <h2>This is Heading 2</h2>
+    <p>Content for Heading 2...</p>
+
+    <h3>This is Heading 3</h3>
+    <p>Content for Heading 3...</p>
+
+    <h1>This is Heading 1-2</h1>
+    <p>Content for Heading 1-2...</p>
+
+    <h1>This is Heading 1-3</h1>
+    <p>Content for Heading 1-3...</p>
+
+    <h1>This is Heading 1-4</h1>
+    <p>Content for Heading 1...</p>
+
+    <h2>This is Heading 2 for 1-4</h2>
+    <p>Content for Heading 2...</p>
+
+    <h3>This is Heading 3 for 1-4</h3>
+    <p>Content for Heading 3...</p>
+
+    <h1>This is Heading 1-5</h1>
+    <p>Content for Heading 1...</p>
+</body>
+</html>
